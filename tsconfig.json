@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "noImplicitAny": true,
+    "baseUrl": ".",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "noEmit": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "strictNullChecks": true
+  },
+  "include": [
+    "lib/**/*",
+    "tests/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+  ]
+}
