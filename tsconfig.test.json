@@ -7,6 +7,7 @@
     "typeRoots": [
       "node_modules/@types"
     ],
+    "allowJs": true,
     "outDir": "dist",
     "sourceMap": true,
     "esModuleInterop": true,
@@ -14,6 +15,7 @@
     "strictNullChecks": true
   },
   "include": [
+    "index.js",
     "lib/**/*",
     "tests/**/*"
   ],

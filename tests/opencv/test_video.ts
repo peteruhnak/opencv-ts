@@ -78,25 +78,30 @@ QUnit.test('Background Segmentation', function (assert) {
   const varThreshold = 15
   const detectShadows = true
 
-  let mog2 = new cv.BackgroundSubtractorMOG2(history, varThreshold, detectShadows)
+  // TODO: BackgroundSubtractorMOG2 currently doesn't expose any functions to query it's internal state,
+  // TODO: possibly due the get*() methods being virtual.
+  // TOOD: As a result, we only test that calling constructors didn't fail.
 
-  assert.true(mog2 instanceof cv.BackgroundSubtractorMOG2)
+  {
+    const mog2 = new cv.BackgroundSubtractorMOG2(history, varThreshold, detectShadows)
+    assert.true(mog2 instanceof cv.BackgroundSubtractorMOG2)
+    mog2.delete()
+  }
+  {
+    const mog2 = new cv.BackgroundSubtractorMOG2(history, varThreshold)
+    assert.equal(mog2 instanceof cv.BackgroundSubtractorMOG2, true)
+    mog2.delete()
+  }
 
-  mog2.delete()
+  {
+    const mog2 = new cv.BackgroundSubtractorMOG2(history)
+    assert.true(mog2 instanceof cv.BackgroundSubtractorMOG2)
+    mog2.delete()
+  }
 
-  mog2 = new cv.BackgroundSubtractorMOG2()
-
-  assert.equal(mog2 instanceof cv.BackgroundSubtractorMOG2, true)
-
-  mog2.delete()
-
-  mog2 = new cv.BackgroundSubtractorMOG2(history)
-
-  mog2.delete()
-
-  mog2 = new cv.BackgroundSubtractorMOG2(history, varThreshold)
-
-  assert.equal(mog2 instanceof cv.BackgroundSubtractorMOG2, true)
-
-  mog2.delete()
+  {
+    const mog2 = new cv.BackgroundSubtractorMOG2()
+    assert.true(mog2 instanceof cv.BackgroundSubtractorMOG2)
+    mog2.delete()
+  }
 })

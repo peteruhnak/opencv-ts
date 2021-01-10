@@ -40,62 +40,94 @@
 
 // Author : Rijubrata Bhaumik, Intel Corporation. rijubrata.bhaumik[at]intel[dot]com
 
-import cv from '../../lib'
-cv.loadOpenCV()
+import cv from '../..'
 
-QUnit.module('Photo', {})
+declare global {
+  interface Assert {
+    epsilonEqual(actual: number, expected: number, epsilon: number): void
+  }
+}
 
-QUnit.test('test_photo', function(assert) {
+
+Object.assign(QUnit.assert, {
+  epsilonEqual: (actual: number, expected: number, epsilon: number): void => {
+    const diff = Math.abs(actual - expected)
+    QUnit.assert.pushResult({
+      result: diff < epsilon,
+      actual: actual,
+      expected: expected,
+      message: `Numbers expected to differ by less than ${epsilon}, was ${diff}`
+    })
+  }
+})
+
+QUnit.module('Photo', {
+  before: cv.loadOpenCV
+})
+
+QUnit.test('test_photo', function (assert) {
   // CalibrateDebevec
   {
-    const calibration = new cv.CalibrateDebevec()
-    assert.ok(true, calibration)
+    const calibration = new cv.CalibrateDebevec(1, 2.2, true)
+    assert.strictEqual(calibration.getSamples(), 1)
+    assert.epsilonEqual(calibration.getLambda(), 2.2, 1e-5)
+    assert.strictEqual(calibration.getRandom(), true)
     //let response = calibration.process(images, exposures);
+    calibration.delete()
   }
   // CalibrateRobertson
   {
-    const calibration = new cv.CalibrateRobertson()
-    assert.ok(true, calibration)
+    const calibration = new cv.CalibrateRobertson(1, 2.2)
+    assert.strictEqual(calibration.getMaxIter(), 1)
+    assert.epsilonEqual(calibration.getThreshold(), 2.2, 1e-5)
     //let response = calibration.process(images, exposures);
+    calibration.delete()
   }
 
   // MergeDebevec
   {
     const merge = new cv.MergeDebevec()
-    assert.ok(true, merge)
+    assert.true(merge instanceof cv.MergeDebevec)
     //let hdr = merge.process(images, exposures, response);
+    merge.delete()
   }
   // MergeMertens
   {
-    const merge = new cv.MergeMertens()
-    assert.ok(true, merge)
+    const merge = new cv.MergeMertens(2.2, 3.3, 4.4)
+    assert.epsilonEqual(merge.getContrastWeight(), 2.2, 1e-5)
+    assert.epsilonEqual(merge.getSaturationWeight(), 3.3, 1e-5)
+    assert.epsilonEqual(merge.getExposureWeight(), 4.4, 1e-5)
     //let hdr = merge.process(images, exposures, response);
   }
   // MergeRobertson
   {
     const merge = new cv.MergeRobertson()
-    assert.ok(true, merge)
+    assert.true(merge instanceof cv.MergeRobertson)
     //let hdr = merge.process(images, exposures, response);
   }
 
   // TonemapDrago
   {
-    const tonemap = new cv.TonemapDrago()
-    assert.ok(true, tonemap)
+    const tonemap = new cv.TonemapDrago(2.2, 3.3, 4.4)
+    assert.epsilonEqual(tonemap.getSaturation(), 3.3, 1e-5)
+    assert.epsilonEqual(tonemap.getBias(), 4.4, 1e-5)
     // let ldr = new cv.Mat();
     // let retval = tonemap.process(hdr, ldr);
   }
   // TonemapMantiuk
   {
-    const tonemap = new cv.TonemapMantiuk()
-    assert.ok(true, tonemap)
+    const tonemap = new cv.TonemapMantiuk(2.2, 3.3, 4.4)
+    assert.epsilonEqual(tonemap.getScale(), 3.3, 1e-5)
+    assert.epsilonEqual(tonemap.getSaturation(), 4.4, 1e-5)
     // let ldr = new cv.Mat();
     // let retval = tonemap.process(hdr, ldr);
   }
   // TonemapReinhard
   {
-    const tonemap = new cv.TonemapReinhard()
-    assert.ok(true, tonemap)
+    const tonemap = new cv.TonemapReinhard(2.2, 3.3, 4.4, 5.5)
+    assert.epsilonEqual(tonemap.getIntensity(), 3.3, 1e-5)
+    assert.epsilonEqual(tonemap.getLightAdaptation(), 4.4, 1e-5)
+    assert.epsilonEqual(tonemap.getColorAdaptation(), 5.5, 1e-5)
     // let ldr = new cv.Mat();
     // let retval = tonemap.process(hdr, ldr);
   }
@@ -104,10 +136,14 @@ QUnit.test('test_photo', function(assert) {
     const src = new cv.Mat(100, 100, cv.CV_8UC3, new cv.Scalar(127, 127, 127, 255))
     const mask = new cv.Mat(100, 100, cv.CV_8UC1, new cv.Scalar(0, 0, 0, 0))
     const dst = new cv.Mat()
-    cv.line(mask, new cv.Point(10, 50), new cv.Point(90, 50), new cv.Scalar(255, 255, 255, 255),5)
+    cv.line(mask, new cv.Point(10, 50), new cv.Point(90, 50), new cv.Scalar(255, 255, 255, 255), 5)
     cv.inpaint(src, mask, dst, 3, cv.INPAINT_TELEA)
     assert.equal(dst.rows, 100)
     assert.equal(dst.cols, 100)
     assert.equal(dst.channels(), 3)
+
+    src.delete()
+    mask.delete()
+    dst.delete()
   }
 })

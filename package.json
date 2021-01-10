@@ -7,8 +7,10 @@
   "main": "index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {
-    "test": "node --enable-source-maps --liftoff --no-wasm-tier-up ./node_modules/qunit/bin/qunit.js"
+    "test": "node --enable-source-maps --liftoff --no-wasm-tier-up ./node_modules/qunit/bin/qunit.js dist/tests",
+    "test:single": "node --enable-source-maps --liftoff --no-wasm-tier-up ./node_modules/qunit/bin/qunit.js",
     "gen:types": "python ./ts_generator/typegen.py",
+    "watch:test": "tsc --watch -p ./tsconfig.test.json"
   },
   "optionalDependencies": {},
   "devDependencies": {

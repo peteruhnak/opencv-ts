@@ -2,18 +2,19 @@
 // It is subject to the license terms in the LICENSE file found in the top-level directory
 // of this distribution and at http://opencv.org/license.html.
 
-import cv from '../../lib'
-cv.loadOpenCV()
+import cv from '../../'
 
-QUnit.module('Camera Calibration and 3D Reconstruction', {})
+QUnit.module('Camera Calibration and 3D Reconstruction', {
+  before: cv.loadOpenCV
+})
 
-QUnit.test('constants', function(assert) {
+QUnit.test('constants', function (assert) {
   assert.strictEqual(typeof cv.LMEDS, 'number')
   assert.strictEqual(typeof cv.RANSAC, 'number')
   assert.strictEqual(typeof cv.RHO, 'number')
 })
 
-QUnit.test('findHomography', function(assert) {
+QUnit.test('findHomography', function (assert) {
   const srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
     56,
     65,
@@ -37,13 +38,13 @@ QUnit.test('findHomography', function(assert) {
 
   const mat = cv.findHomography(srcPoints, dstPoints)
 
-  assert.ok(mat instanceof cv.Mat)
+  assert.true(mat instanceof cv.Mat)
 })
 
-QUnit.test('Rodrigues', function(assert) {
+QUnit.test('Rodrigues', function (assert) {
   // Converts a rotation matrix to a rotation vector and vice versa
   // data64F is the output array
-  const rvec0 = cv.matFromArray(1, 3, cv.CV_64F, [1,1,1])
+  const rvec0 = cv.matFromArray(1, 3, cv.CV_64F, [1, 1, 1])
   const rMat0 = new cv.Mat()
   const rvec1 = new cv.Mat()
 
@@ -53,18 +54,17 @@ QUnit.test('Rodrigues', function(assert) {
   // vec to Mat, starting number is 3 long and each element is 1.
   cv.Rodrigues(rvec0, rMat0)
 
-  assert.ok(rMat0.data64F.length == 9)
-  assert.ok(0.23 > rMat0.data64F[0] > 0.22)
+  assert.strictEqual(rMat0.data64F.length, 9)
+  assert.true(Math.abs(rMat0.data64F[0] - 0.22) < 0.01)
 
   // convert Mat to Vec, should be same as what we started with, 3 long and each item should be a 1.
   cv.Rodrigues(rMat0, rvec1)
 
-  assert.ok(rvec1.data64F.length == 3)
-  assert.ok(1.01 > rvec1.data64F[0] > 0.9)
-  // Answer should be around 1: 0.9999999999999999
+  assert.strictEqual(rvec1.data64F.length, 3)
+  assert.true(Math.abs(rvec1.data64F[0] - 1) < 0.01)
 })
 
-QUnit.test('estimateAffine2D', function(assert) {
+QUnit.test('estimateAffine2D', function (assert) {
   const inputs = cv.matFromArray(4, 1, cv.CV_32FC2, [
     1, 1,
     80, 0,
@@ -78,12 +78,12 @@ QUnit.test('estimateAffine2D', function(assert) {
     10, 70
   ])
   const M = cv.estimateAffine2D(inputs, outputs)
-  assert.ok(M instanceof cv.Mat)
+  assert.true(M instanceof cv.Mat)
   assert.deepEqual(Array.from(M.data), [
-    23,  55,  97, 126,  87, 139, 227,  63,   0,   0,
-    0,   0,   0,   0, 232, 191,  71, 246,  12,  68,
-    165,  35,  53,  64,  99,  56,  27,  66,  14, 254,
-    212,  63, 103, 102, 102, 102, 102, 102, 182, 191,
-    195, 252, 174,  22,  55,  97,  73,  64
+    23, 55, 97, 126, 87, 139, 227, 63, 0, 0,
+    0, 0, 0, 0, 232, 191, 71, 246, 12, 68,
+    165, 35, 53, 64, 99, 56, 27, 66, 14, 254,
+    212, 63, 103, 102, 102, 102, 102, 102, 182, 191,
+    195, 252, 174, 22, 55, 97, 73, 64
   ])
 })

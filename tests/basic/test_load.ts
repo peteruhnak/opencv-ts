@@ -1,6 +1,5 @@
 import cv from '../../'
 
-
 QUnit.module('OpenCV-TS', {
   before: cv.loadOpenCV
 })
