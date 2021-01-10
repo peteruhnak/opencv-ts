@@ -69,120 +69,123 @@
 
 import cv from '../../'
 
-QUnit.module('Utils', {})
-QUnit.test('Test vectors', function(assert) {
+QUnit.module('Utils', {
+  before: cv.loadOpenCV
+})
+
+QUnit.test('Test vectors', function (assert) {
   {
     const pointVector = new cv.PointVector()
-    for (let i=0; i<100; ++i) {
-      pointVector.push_back({x: i, y: 2*i})
+    for (let i = 0; i < 100; ++i) {
+      pointVector.push_back({ x: i, y: 2 * i })
     }
 
-    assert.equal(pointVector.size(), 100)
+    assert.strictEqual(pointVector.size(), 100)
 
     let index = 10
     let item = pointVector.get(index)
-    assert.equal(item.x, index)
-    assert.equal(item.y, 2*index)
+    assert.strictEqual(item.x, index)
+    assert.strictEqual(item.y, 2 * index)
 
     index = 0
     item = pointVector.get(index)
-    assert.equal(item.x, index)
-    assert.equal(item.y, 2*index)
+    assert.strictEqual(item.x, index)
+    assert.strictEqual(item.y, 2 * index)
 
     index = 99
     item = pointVector.get(index)
-    assert.equal(item.x, index)
-    assert.equal(item.y, 2*index)
+    assert.strictEqual(item.x, index)
+    assert.strictEqual(item.y, 2 * index)
 
     pointVector.delete()
   }
 
   {
     const pointVector = new cv.PointVector()
-    for (let i=0; i<100; ++i) {
-      pointVector.push_back(new cv.Point(i, 2*i))
+    for (let i = 0; i < 100; ++i) {
+      pointVector.push_back(new cv.Point(i, 2 * i))
     }
 
     pointVector.push_back(new cv.Point())
 
-    assert.equal(pointVector.size(), 101)
+    assert.strictEqual(pointVector.size(), 101)
 
     let index = 10
     let item = pointVector.get(index)
-    assert.equal(item.x, index)
-    assert.equal(item.y, 2*index)
+    assert.strictEqual(item.x, index)
+    assert.strictEqual(item.y, 2 * index)
 
     index = 0
     item = pointVector.get(index)
-    assert.equal(item.x, index)
-    assert.equal(item.y, 2*index)
+    assert.strictEqual(item.x, index)
+    assert.strictEqual(item.y, 2 * index)
 
     index = 99
     item = pointVector.get(index)
-    assert.equal(item.x, index)
-    assert.equal(item.y, 2*index)
+    assert.strictEqual(item.x, index)
+    assert.strictEqual(item.y, 2 * index)
 
     index = 100
     item = pointVector.get(index)
-    assert.equal(item.x, 0)
-    assert.equal(item.y, 0)
+    assert.strictEqual(item.x, 0)
+    assert.strictEqual(item.y, 0)
 
     pointVector.delete()
   }
 })
-QUnit.test('Test Rect', function(assert) {
+QUnit.test('Test Rect', function (assert) {
   const rectVector = new cv.RectVector()
-  const rect = {x: 1, y: 2, width: 3, height: 4}
+  const rect = { x: 1, y: 2, width: 3, height: 4 }
   rectVector.push_back(rect)
   rectVector.push_back(new cv.Rect())
   rectVector.push_back(new cv.Rect(rect))
-  rectVector.push_back(new cv.Rect({x: 5, y: 6}, {width: 7, height: 8}))
+  rectVector.push_back(new cv.Rect({ x: 5, y: 6 }, { width: 7, height: 8 }))
   rectVector.push_back(new cv.Rect(9, 10, 11, 12))
 
-  assert.equal(rectVector.size(), 5)
+  assert.strictEqual(rectVector.size(), 5)
 
   let item = rectVector.get(0)
-  assert.equal(item.x, 1)
-  assert.equal(item.y, 2)
-  assert.equal(item.width, 3)
-  assert.equal(item.height, 4)
+  assert.strictEqual(item.x, 1)
+  assert.strictEqual(item.y, 2)
+  assert.strictEqual(item.width, 3)
+  assert.strictEqual(item.height, 4)
 
   item = rectVector.get(1)
-  assert.equal(item.x, 0)
-  assert.equal(item.y, 0)
-  assert.equal(item.width, 0)
-  assert.equal(item.height, 0)
+  assert.strictEqual(item.x, 0)
+  assert.strictEqual(item.y, 0)
+  assert.strictEqual(item.width, 0)
+  assert.strictEqual(item.height, 0)
 
   item = rectVector.get(2)
-  assert.equal(item.x, 1)
-  assert.equal(item.y, 2)
-  assert.equal(item.width, 3)
-  assert.equal(item.height, 4)
+  assert.strictEqual(item.x, 1)
+  assert.strictEqual(item.y, 2)
+  assert.strictEqual(item.width, 3)
+  assert.strictEqual(item.height, 4)
 
   item = rectVector.get(3)
-  assert.equal(item.x, 5)
-  assert.equal(item.y, 6)
-  assert.equal(item.width, 7)
-  assert.equal(item.height, 8)
+  assert.strictEqual(item.x, 5)
+  assert.strictEqual(item.y, 6)
+  assert.strictEqual(item.width, 7)
+  assert.strictEqual(item.height, 8)
 
   item = rectVector.get(4)
-  assert.equal(item.x, 9)
-  assert.equal(item.y, 10)
-  assert.equal(item.width, 11)
-  assert.equal(item.height, 12)
+  assert.strictEqual(item.x, 9)
+  assert.strictEqual(item.y, 10)
+  assert.strictEqual(item.width, 11)
+  assert.strictEqual(item.height, 12)
 
   rectVector.delete()
 })
-QUnit.test('Test Size', function(assert) {
+QUnit.test('Test Size', function (assert) {
   {
     const mat = new cv.Mat()
-    mat.create({width: 5, height: 10}, cv.CV_8UC4)
+    mat.create({ width: 5, height: 10 }, cv.CV_8UC4)
     const size = mat.size()
 
-    assert.ok(mat.type() === cv.CV_8UC4)
-    assert.ok(size.height === 10)
-    assert.ok(size.width === 5)
-    assert.ok(mat.channels() === 4)
+    assert.strictEqual(mat.type(), cv.CV_8UC4)
+    assert.strictEqual(size.height, 10)
+    assert.strictEqual(size.width, 5)
+    assert.strictEqual(mat.channels(), 4)
 
     mat.delete()
   }
@@ -192,60 +195,60 @@ QUnit.test('Test Size', function(assert) {
     mat.create(new cv.Size(5, 10), cv.CV_8UC4)
     const size = mat.size()
 
-    assert.ok(mat.type() === cv.CV_8UC4)
-    assert.ok(size.height === 10)
-    assert.ok(size.width === 5)
-    assert.ok(mat.channels() === 4)
+    assert.strictEqual(mat.type(), cv.CV_8UC4)
+    assert.strictEqual(size.height, 10)
+    assert.strictEqual(size.width, 5)
+    assert.strictEqual(mat.channels(), 4)
 
     mat.delete()
   }
 })
 
 
-QUnit.test('test_rotated_rect', function(assert) {
+QUnit.test('test_rotated_rect', function (assert) {
   {
-    const rect = {center: {x: 100, y: 100}, size: {height: 100, width: 50}, angle: 30}
+    const rect = { center: { x: 100, y: 100 }, size: { height: 100, width: 50 }, angle: 30 }
 
-    assert.equal(rect.center.x, 100)
-    assert.equal(rect.center.y, 100)
-    assert.equal(rect.angle, 30)
-    assert.equal(rect.size.height, 100)
-    assert.equal(rect.size.width, 50)
+    assert.strictEqual(rect.center.x, 100)
+    assert.strictEqual(rect.center.y, 100)
+    assert.strictEqual(rect.angle, 30)
+    assert.strictEqual(rect.size.height, 100)
+    assert.strictEqual(rect.size.width, 50)
   }
 
   {
     const rect = new cv.RotatedRect()
 
-    assert.equal(rect.center.x, 0)
-    assert.equal(rect.center.y, 0)
-    assert.equal(rect.angle, 0)
-    assert.equal(rect.size.height, 0)
-    assert.equal(rect.size.width, 0)
+    assert.strictEqual(rect.center.x, 0)
+    assert.strictEqual(rect.center.y, 0)
+    assert.strictEqual(rect.angle, 0)
+    assert.strictEqual(rect.size.height, 0)
+    assert.strictEqual(rect.size.width, 0)
 
     const points = cv.RotatedRect.points(rect)
 
-    assert.equal(points[0].x, 0)
-    assert.equal(points[0].y, 0)
-    assert.equal(points[1].x, 0)
-    assert.equal(points[1].y, 0)
-    assert.equal(points[2].x, 0)
-    assert.equal(points[2].y, 0)
-    assert.equal(points[3].x, 0)
-    assert.equal(points[3].y, 0)
+    assert.strictEqual(points[0].x, 0)
+    assert.strictEqual(points[0].y, 0)
+    assert.strictEqual(points[1].x, 0)
+    assert.strictEqual(points[1].y, 0)
+    assert.strictEqual(points[2].x, 0)
+    assert.strictEqual(points[2].y, 0)
+    assert.strictEqual(points[3].x, 0)
+    assert.strictEqual(points[3].y, 0)
   }
 
   {
-    const rect = new cv.RotatedRect({x: 100, y: 100}, {height: 100, width: 50}, 30)
+    const rect = new cv.RotatedRect({ x: 100, y: 100 }, { height: 100, width: 50 }, 30)
 
-    assert.equal(rect.center.x, 100)
-    assert.equal(rect.center.y, 100)
-    assert.equal(rect.angle, 30)
-    assert.equal(rect.size.height, 100)
-    assert.equal(rect.size.width, 50)
+    assert.strictEqual(rect.center.x, 100)
+    assert.strictEqual(rect.center.y, 100)
+    assert.strictEqual(rect.angle, 30)
+    assert.strictEqual(rect.size.height, 100)
+    assert.strictEqual(rect.size.width, 50)
 
     const points = cv.RotatedRect.points(rect)
 
-    assert.equal(points[0].x, cv.RotatedRect.boundingRect2f(rect).x)
-    assert.equal(points[1].y, cv.RotatedRect.boundingRect2f(rect).y)
+    assert.strictEqual(points[0].x, cv.RotatedRect.boundingRect2f(rect).x)
+    assert.strictEqual(points[1].y, cv.RotatedRect.boundingRect2f(rect).y)
   }
 })

@@ -70,7 +70,9 @@
 
 import cv from '../../'
 
-QUnit.module('Core', {})
+QUnit.module('Core', {
+  before: cv.loadOpenCV
+})
 
 QUnit.test('test_mat_creation', function(assert) {
   // Mat constructors.
@@ -78,16 +80,17 @@ QUnit.test('test_mat_creation', function(assert) {
   {
     const mat = new cv.Mat(10, 20, cv.CV_8UC3)
 
-    assert.equal(mat.type(), cv.CV_8UC3)
-    assert.equal(mat.depth(), cv.CV_8U)
-    assert.equal(mat.channels(), 3)
+    assert.strictEqual(mat.type(), cv.CV_8UC3)
+    assert.strictEqual(mat.depth(), cv.CV_8U)
+    assert.strictEqual(mat.channels(), 3)
     assert.false(mat.empty())
 
     const size = mat.size()
-    assert.equal(size.height, 10)
-    assert.equal(size.width, 20)
+    assert.strictEqual(size.height, 10)
+    assert.strictEqual(size.width, 20)
 
     mat.delete()
+    assert.true(mat.isDeleted())
   }
 
   // Mat::Mat(const Mat &)
@@ -96,15 +99,15 @@ QUnit.test('test_mat_creation', function(assert) {
     const mat1 = new cv.Mat(10, 20, cv.CV_8UC3)
     const mat2 = new cv.Mat(mat1)
 
-    assert.equal(mat2.type(), mat1.type())
-    assert.equal(mat2.depth(), mat1.depth())
-    assert.equal(mat2.channels(), mat1.channels())
-    assert.equal(mat2.empty(), mat1.empty())
+    assert.strictEqual(mat2.type(), mat1.type())
+    assert.strictEqual(mat2.depth(), mat1.depth())
+    assert.strictEqual(mat2.channels(), mat1.channels())
+    assert.strictEqual(mat2.empty(), mat1.empty())
 
     const size2 = mat2.size()
     const size1 = mat1.size()
-    assert.equal(size2.width, size1.width)
-    assert.equal(size2.width, size1.width)
+    assert.strictEqual(size2.width, size1.width)
+    assert.strictEqual(size2.width, size1.width)
 
     mat1.delete()
     mat2.delete()
@@ -116,14 +119,14 @@ QUnit.test('test_mat_creation', function(assert) {
     const data = cv._malloc(10 * 10 * 1)
     const mat = new cv.Mat(10, 10, cv.CV_8UC1, data, 0)
 
-    assert.equal(mat.type(), cv.CV_8UC1)
-    assert.equal(mat.depth(), cv.CV_8U)
-    assert.equal(mat.channels(), 1)
+    assert.strictEqual(mat.type(), cv.CV_8UC1)
+    assert.strictEqual(mat.depth(), cv.CV_8U)
+    assert.strictEqual(mat.channels(), 1)
     assert.false(mat.empty())
 
     const size = mat.size()
-    assert.equal(size.height, 10)
-    assert.equal(size.width, 10)
+    assert.strictEqual(size.height, 10)
+    assert.strictEqual(size.width, 10)
 
     mat.delete()
   }
@@ -136,10 +139,10 @@ QUnit.test('test_mat_creation', function(assert) {
     for (let r = 0; r < mat.rows; r++) {
       for (let c = 0; c < mat.cols; c++) {
         const element = mat.ptr(r, c)
-        assert.equal(element[0], 0)
-        assert.equal(element[1], 1)
-        assert.equal(element[2], 2)
-        assert.equal(element[3], 3)
+        assert.strictEqual(element[0], 0)
+        assert.strictEqual(element[1], 1)
+        assert.strictEqual(element[2], 2)
+        assert.strictEqual(element[3], 3)
       }
     }
 
@@ -152,10 +155,10 @@ QUnit.test('test_mat_creation', function(assert) {
     mat.create(10, 5, cv.CV_8UC3)
     const size = mat.size()
 
-    assert.ok(mat.type() === cv.CV_8UC3)
-    assert.ok(size.height === 10)
-    assert.ok(size.width === 5)
-    assert.ok(mat.channels() === 3)
+    assert.strictEqual(mat.type(), cv.CV_8UC3)
+    assert.strictEqual(size.height, 10)
+    assert.strictEqual(size.width, 5)
+    assert.strictEqual(mat.channels(), 3)
 
     mat.delete()
   }
@@ -165,10 +168,10 @@ QUnit.test('test_mat_creation', function(assert) {
     mat.create({height: 10, width: 5}, cv.CV_8UC4)
     const size = mat.size()
 
-    assert.ok(mat.type() === cv.CV_8UC4)
-    assert.ok(size.height === 10)
-    assert.ok(size.width === 5)
-    assert.ok(mat.channels() === 4)
+    assert.strictEqual(mat.type(), cv.CV_8UC4)
+    assert.strictEqual(size.height, 10)
+    assert.strictEqual(size.width, 5)
+    assert.strictEqual(mat.channels(), 4)
 
     mat.delete()
   }
@@ -177,12 +180,11 @@ QUnit.test('test_mat_creation', function(assert) {
     const mat = cv.Mat.ones(5, 5, cv.CV_8UC1)
     const mat2 = mat.clone()
 
-    assert.equal(mat.channels, mat2.channels)
-    assert.equal(mat.size().height, mat2.size().height)
-    assert.equal(mat.size().width, mat2.size().width)
+    assert.strictEqual(mat.channels, mat2.channels)
+    assert.strictEqual(mat.size().height, mat2.size().height)
+    assert.strictEqual(mat.size().width, mat2.size().width)
 
     assert.deepEqual(mat.data, mat2.data)
-
 
     mat.delete()
     mat2.delete()
@@ -193,9 +195,9 @@ QUnit.test('test_mat_creation', function(assert) {
     const mat2 = new cv.Mat()
     mat.copyTo(mat2)
 
-    assert.equal(mat.channels, mat2.channels)
-    assert.equal(mat.size().height, mat2.size().height)
-    assert.equal(mat.size().width, mat2.size().width)
+    assert.strictEqual(mat.channels, mat2.channels)
+    assert.strictEqual(mat.size().height, mat2.size().height)
+    assert.strictEqual(mat.size().width, mat2.size().width)
 
     assert.deepEqual(mat.data, mat2.data)
 
@@ -210,9 +212,9 @@ QUnit.test('test_mat_creation', function(assert) {
     const mask = new cv.Mat(5, 5, cv.CV_8UC1, new cv.Scalar(1))
     mat.copyTo(mat2, mask)
 
-    assert.equal(mat.channels, mat2.channels)
-    assert.equal(mat.size().height, mat2.size().height)
-    assert.equal(mat.size().width, mat2.size().width)
+    assert.strictEqual(mat.channels, mat2.channels)
+    assert.strictEqual(mat.size().height, mat2.size().height)
+    assert.strictEqual(mat.size().width, mat2.size().width)
 
     assert.deepEqual(mat.data, mat2.data)
 
@@ -357,15 +359,15 @@ QUnit.test('test_mat_creation', function(assert) {
     const mat1 = new cv.Mat(mat)
     const mat2 = mat
 
-    assert.equal(mat.rows, mat1.rows)
-    assert.equal(mat.cols, mat1.cols)
-    assert.equal(mat.type(), mat1.type())
+    assert.strictEqual(mat.rows, mat1.rows)
+    assert.strictEqual(mat.cols, mat1.cols)
+    assert.strictEqual(mat.type(), mat1.type())
     assert.deepEqual(mat.data, mat1.data)
 
     mat.delete()
 
-    assert.equal(mat1.isDeleted(), false)
-    assert.equal(mat2.isDeleted(), true)
+    assert.strictEqual(mat1.isDeleted(), false)
+    assert.strictEqual(mat2.isDeleted(), true)
 
     mat1.delete()
   }
@@ -414,7 +416,7 @@ QUnit.test('test_mat_ptr', function(assert) {
     // Access matrix[2, 1].
     view = mat.ptr(2)
 
-    assert.equal(view[1], RValue)
+    assert.strictEqual(view[1], RValue)
 
     mat.delete()
   }
@@ -433,9 +435,9 @@ QUnit.test('test_mat_ptr', function(assert) {
     // Access matrix[2, 1].
     view = mat.ptr(2)
 
-    assert.equal(view[3], RValue)
-    assert.equal(view[3 + 1], GValue)
-    assert.equal(view[3 + 2], BValue)
+    assert.strictEqual(view[3], RValue)
+    assert.strictEqual(view[3 + 1], GValue)
+    assert.strictEqual(view[3 + 2], BValue)
 
     mat.delete()
   }
@@ -454,9 +456,9 @@ QUnit.test('test_mat_ptr', function(assert) {
     // Access matrix[2, 1].
     view = mat.ptr(2, 1)
 
-    assert.equal(view[0], RValue)
-    assert.equal(view[1], GValue)
-    assert.equal(view[2], BValue)
+    assert.strictEqual(view[0], RValue)
+    assert.strictEqual(view[1], GValue)
+    assert.strictEqual(view[2], BValue)
 
     mat.delete()
   }
@@ -478,7 +480,7 @@ QUnit.test('test_mat_ptr', function(assert) {
     // Access matrix[2, 1].
     view = mat.floatPtr(2)
 
-    assert.ok(Math.abs(view[1] - RValueF32) < EPSILON)
+    assert.true(Math.abs(view[1] - RValueF32) < EPSILON)
 
     mat.delete()
   }
@@ -497,9 +499,9 @@ QUnit.test('test_mat_ptr', function(assert) {
     // Access matrix[2, 1].
     view = mat.floatPtr(2)
 
-    assert.ok(Math.abs(view[3] - RValueF32) < EPSILON)
-    assert.ok(Math.abs(view[3 + 1] - GValueF32) < EPSILON)
-    assert.ok(Math.abs(view[3 + 2] - BValueF32) < EPSILON)
+    assert.true(Math.abs(view[3] - RValueF32) < EPSILON)
+    assert.true(Math.abs(view[3 + 1] - GValueF32) < EPSILON)
+    assert.true(Math.abs(view[3 + 2] - BValueF32) < EPSILON)
 
     mat.delete()
   }
@@ -518,9 +520,9 @@ QUnit.test('test_mat_ptr', function(assert) {
     // Access matrix[2, 1].
     view = mat.floatPtr(2, 1)
 
-    assert.ok(Math.abs(view[0] - RValueF32) < EPSILON)
-    assert.ok(Math.abs(view[1] - GValueF32) < EPSILON)
-    assert.ok(Math.abs(view[2] - BValueF32) < EPSILON)
+    assert.true(Math.abs(view[0] - RValueF32) < EPSILON)
+    assert.true(Math.abs(view[1] - GValueF32) < EPSILON)
+    assert.true(Math.abs(view[2] - BValueF32) < EPSILON)
 
     mat.delete()
   }
@@ -595,11 +597,11 @@ QUnit.test('test_mat_miscs', function(assert) {
     const mat = cv.matFromArray(2, 2, cv.CV_8UC2, [1, 2, 3, 4, 5, 6, 7, 8])
     const col = mat.col(1)
 
-    assert.equal(col.isContinuous(), false)
-    assert.equal(col.ptr(0, 0)[0], 3)
-    assert.equal(col.ptr(0, 0)[1], 4)
-    assert.equal(col.ptr(1, 0)[0], 7)
-    assert.equal(col.ptr(1, 0)[1], 8)
+    assert.strictEqual(col.isContinuous(), false)
+    assert.strictEqual(col.ptr(0, 0)[0], 3)
+    assert.strictEqual(col.ptr(0, 0)[1], 4)
+    assert.strictEqual(col.ptr(1, 0)[0], 7)
+    assert.strictEqual(col.ptr(1, 0)[1], 8)
 
     col.delete()
     mat.delete()
@@ -610,8 +612,8 @@ QUnit.test('test_mat_miscs', function(assert) {
     const mat = cv.Mat.zeros(5, 5, cv.CV_8UC2)
     const row = mat.row(1)
     const view = row.data
-    assert.equal(view[0], 0)
-    assert.equal(view[4], 0)
+    assert.strictEqual(view[0], 0)
+    assert.strictEqual(view[4], 0)
 
     row.delete()
     mat.delete()
@@ -625,15 +627,15 @@ QUnit.test('test_mat_miscs', function(assert) {
     mat.convertTo(grayMat, cv.CV_8U, 2, 1)
     // dest = 2 * source(x, y) + 1.
     const view = grayMat.data
-    assert.equal(view[0], (1 * 2) + 1)
+    assert.strictEqual(view[0], (1 * 2) + 1)
 
     mat.convertTo(grayMat, cv.CV_8U)
     // dest = 1 * source(x, y) + 0.
-    assert.equal(view[0], 1)
+    assert.strictEqual(view[0], 1)
 
     mat.convertTo(grayMat, cv.CV_8U, 2)
     // dest = 2 * source(x, y) + 0.
-    assert.equal(view[0], 2)
+    assert.strictEqual(view[0], 2)
 
     grayMat.delete()
     mat.delete()
@@ -653,19 +655,19 @@ QUnit.test('test_mat_miscs', function(assert) {
 
     const bgrPlanes = new cv.MatVector()
     cv.split(mat, bgrPlanes)
-    assert.equal(bgrPlanes.size(), 3)
+    assert.strictEqual(bgrPlanes.size(), 3)
 
     const rMat = bgrPlanes.get(0)
     view = rMat.data
-    assert.equal(view[0], R)
+    assert.strictEqual(view[0], R)
 
     const gMat = bgrPlanes.get(1)
     view = gMat.data
-    assert.equal(view[0], G)
+    assert.strictEqual(view[0], G)
 
     const bMat = bgrPlanes.get(2)
     view = bMat.data
-    assert.equal(view[0], B)
+    assert.strictEqual(view[0], B)
 
     mat.delete()
     rMat.delete()
@@ -677,16 +679,16 @@ QUnit.test('test_mat_miscs', function(assert) {
   // elemSize
   {
     const mat = cv.Mat.ones(5, 5, cv.CV_8UC3)
-    assert.equal(mat.elemSize(), 3)
-    assert.equal(mat.elemSize1(), 1)
+    assert.strictEqual(mat.elemSize(), 3)
+    assert.strictEqual(mat.elemSize1(), 1)
 
     const mat2 = cv.Mat.zeros(5, 5, cv.CV_8UC1)
-    assert.equal(mat2.elemSize(), 1)
-    assert.equal(mat2.elemSize1(), 1)
+    assert.strictEqual(mat2.elemSize(), 1)
+    assert.strictEqual(mat2.elemSize1(), 1)
 
     const mat3 = cv.Mat.eye(5, 5, cv.CV_16UC3)
-    assert.equal(mat3.elemSize(), 2 * 3)
-    assert.equal(mat3.elemSize1(), 2)
+    assert.strictEqual(mat3.elemSize(), 2 * 3)
+    assert.strictEqual(mat3.elemSize1(), 2)
 
     mat.delete()
     mat2.delete()
@@ -696,16 +698,16 @@ QUnit.test('test_mat_miscs', function(assert) {
   // step
   {
     const mat = cv.Mat.ones(5, 5, cv.CV_8UC3)
-    assert.equal(mat.step[0], 15)
-    assert.equal(mat.step[1], 3)
+    assert.strictEqual(mat.step[0], 15)
+    assert.strictEqual(mat.step[1], 3)
 
     const mat2 = cv.Mat.zeros(5, 5, cv.CV_8UC1)
-    assert.equal(mat2.step[0], 5)
-    assert.equal(mat2.step[1], 1)
+    assert.strictEqual(mat2.step[0], 5)
+    assert.strictEqual(mat2.step[1], 1)
 
     const mat3 = cv.Mat.eye(5, 5, cv.CV_16UC3)
-    assert.equal(mat3.step[0], 30)
-    assert.equal(mat3.step[1], 6)
+    assert.strictEqual(mat3.step[0], 30)
+    assert.strictEqual(mat3.step[1], 6)
 
     mat.delete()
     mat2.delete()
@@ -717,9 +719,9 @@ QUnit.test('test_mat_miscs', function(assert) {
     const mat = cv.Mat.ones(5, 5, cv.CV_8UC1)
     const mat2 = cv.Mat.eye(5, 5, cv.CV_8UC1)
 
-    assert.equal(mat.dot(mat), 25)
-    assert.equal(mat.dot(mat2), 5)
-    assert.equal(mat2.dot(mat2), 5)
+    assert.strictEqual(mat.dot(mat), 25)
+    assert.strictEqual(mat.dot(mat2), 5)
+    assert.strictEqual(mat2.dot(mat2), 5)
 
     mat.delete()
     mat2.delete()
@@ -786,14 +788,14 @@ QUnit.test('test mat access', function(assert) {
 
     const mat = new cv.Mat(8, 1, cv.CV_8UC1, dataPtr, 0)
 
-    assert.equal(mat.ucharAt(0), 0)
-    assert.equal(mat.ucharAt(1), 0)
-    assert.equal(mat.ucharAt(2), 0)
-    assert.equal(mat.ucharAt(3), 255)
-    assert.equal(mat.ucharAt(4), 0)
-    assert.equal(mat.ucharAt(5), 1)
-    assert.equal(mat.ucharAt(6), 2)
-    assert.equal(mat.ucharAt(7), 3)
+    assert.strictEqual(mat.ucharAt(0), 0)
+    assert.strictEqual(mat.ucharAt(1), 0)
+    assert.strictEqual(mat.ucharAt(2), 0)
+    assert.strictEqual(mat.ucharAt(3), 255)
+    assert.strictEqual(mat.ucharAt(4), 0)
+    assert.strictEqual(mat.ucharAt(5), 1)
+    assert.strictEqual(mat.ucharAt(6), 2)
+    assert.strictEqual(mat.ucharAt(7), 3)
   }
 
   // test ushortAt(i)
@@ -806,14 +808,14 @@ QUnit.test('test mat access', function(assert) {
 
     const mat = new cv.Mat(8, 1, cv.CV_16SC1, dataPtr, 0)
 
-    assert.equal(mat.ushortAt(0), 0)
-    assert.equal(mat.ushortAt(1), 1000)
-    assert.equal(mat.ushortAt(2), 65000)
-    assert.equal(mat.ushortAt(3), 255)
-    assert.equal(mat.ushortAt(4), 0)
-    assert.equal(mat.ushortAt(5), 1)
-    assert.equal(mat.ushortAt(6), 2)
-    assert.equal(mat.ushortAt(7), 3)
+    assert.strictEqual(mat.ushortAt(0), 0)
+    assert.strictEqual(mat.ushortAt(1), 1000)
+    assert.strictEqual(mat.ushortAt(2), 65000)
+    assert.strictEqual(mat.ushortAt(3), 255)
+    assert.strictEqual(mat.ushortAt(4), 0)
+    assert.strictEqual(mat.ushortAt(5), 1)
+    assert.strictEqual(mat.ushortAt(6), 2)
+    assert.strictEqual(mat.ushortAt(7), 3)
   }
 
   // test intAt(i)
@@ -826,14 +828,14 @@ QUnit.test('test mat access', function(assert) {
 
     const mat = new cv.Mat(8, 1, cv.CV_32SC1, dataPtr, 0)
 
-    assert.equal(mat.intAt(0), 0)
-    assert.equal(mat.intAt(1), -1000)
-    assert.equal(mat.intAt(2), 65000)
-    assert.equal(mat.intAt(3), 255)
-    assert.equal(mat.intAt(4), -2000000)
-    assert.equal(mat.intAt(5), -1)
-    assert.equal(mat.intAt(6), 2)
-    assert.equal(mat.intAt(7), 3)
+    assert.strictEqual(mat.intAt(0), 0)
+    assert.strictEqual(mat.intAt(1), -1000)
+    assert.strictEqual(mat.intAt(2), 65000)
+    assert.strictEqual(mat.intAt(3), 255)
+    assert.strictEqual(mat.intAt(4), -2000000)
+    assert.strictEqual(mat.intAt(5), -1)
+    assert.strictEqual(mat.intAt(6), 2)
+    assert.strictEqual(mat.intAt(7), 3)
   }
 
   // test floatAt(i)
@@ -847,29 +849,29 @@ QUnit.test('test mat access', function(assert) {
 
     const mat = new cv.Mat(8, 1, cv.CV_32FC1, dataPtr, 0)
 
-    assert.equal(Math.abs(mat.floatAt(0)-0) < EPSILON, true)
-    assert.equal(Math.abs(mat.floatAt(1)+10.5) < EPSILON, true)
-    assert.equal(Math.abs(mat.floatAt(2)-650.001) < EPSILON, true)
-    assert.equal(Math.abs(mat.floatAt(3)-255) < EPSILON, true)
-    assert.equal(Math.abs(mat.floatAt(4)+20.1) < EPSILON, true)
-    assert.equal(Math.abs(mat.floatAt(5)+1.2) < EPSILON, true)
-    assert.equal(Math.abs(mat.floatAt(6)-2) < EPSILON, true)
-    assert.equal(Math.abs(mat.floatAt(7)-3.5) < EPSILON, true)
+    assert.strictEqual(Math.abs(mat.floatAt(0)-0) < EPSILON, true)
+    assert.strictEqual(Math.abs(mat.floatAt(1)+10.5) < EPSILON, true)
+    assert.strictEqual(Math.abs(mat.floatAt(2)-650.001) < EPSILON, true)
+    assert.strictEqual(Math.abs(mat.floatAt(3)-255) < EPSILON, true)
+    assert.strictEqual(Math.abs(mat.floatAt(4)+20.1) < EPSILON, true)
+    assert.strictEqual(Math.abs(mat.floatAt(5)+1.2) < EPSILON, true)
+    assert.strictEqual(Math.abs(mat.floatAt(6)-2) < EPSILON, true)
+    assert.strictEqual(Math.abs(mat.floatAt(7)-3.5) < EPSILON, true)
   }
 
   // test intAt(i,j)
   {
     const mat = cv.Mat.eye({height: 3, width: 3}, cv.CV_32SC1)
 
-    assert.equal(mat.intAt(0, 0), 1)
-    assert.equal(mat.intAt(0, 1), 0)
-    assert.equal(mat.intAt(0, 2), 0)
-    assert.equal(mat.intAt(1, 0), 0)
-    assert.equal(mat.intAt(1, 1), 1)
-    assert.equal(mat.intAt(1, 2), 0)
-    assert.equal(mat.intAt(2, 0), 0)
-    assert.equal(mat.intAt(2, 1), 0)
-    assert.equal(mat.intAt(2, 2), 1)
+    assert.strictEqual(mat.intAt(0, 0), 1)
+    assert.strictEqual(mat.intAt(0, 1), 0)
+    assert.strictEqual(mat.intAt(0, 2), 0)
+    assert.strictEqual(mat.intAt(1, 0), 0)
+    assert.strictEqual(mat.intAt(1, 1), 1)
+    assert.strictEqual(mat.intAt(1, 2), 0)
+    assert.strictEqual(mat.intAt(2, 0), 0)
+    assert.strictEqual(mat.intAt(2, 1), 0)
+    assert.strictEqual(mat.intAt(2, 2), 1)
 
     mat.delete()
   }
@@ -885,8 +887,8 @@ QUnit.test('test_mat_operations', function(assert) {
 
     const result = cv.minMaxLoc(src)
 
-    assert.equal(result.minVal, 0)
-    assert.equal(result.maxVal, 2)
+    assert.strictEqual(result.minVal, 0)
+    assert.strictEqual(result.maxVal, 2)
     assert.deepEqual(result.minLoc, {x: 2, y: 0})
     assert.deepEqual(result.maxLoc, {x: 1, y: 1})
 
@@ -900,8 +902,8 @@ QUnit.test('test_mat_roi', function(assert) {
     const mat = cv.matFromArray(2, 2, cv.CV_8UC1, [0, 1, 2, 3])
     const roi = mat.roi(new cv.Rect(1, 1, 1, 1))
 
-    assert.equal(roi.rows, 1)
-    assert.equal(roi.cols, 1)
+    assert.strictEqual(roi.rows, 1)
+    assert.strictEqual(roi.cols, 1)
     assert.deepEqual(roi.data, new Uint8Array([mat.ucharAt(1, 1)]))
 
     mat.delete()
@@ -915,36 +917,36 @@ QUnit.test('test_mat_range', function(assert) {
     const src = cv.matFromArray(2, 2, cv.CV_8UC1, [0, 1, 2, 3])
     let mat = src.colRange(0, 1)
 
-    assert.equal(mat.isContinuous(), false)
-    assert.equal(mat.rows, 2)
-    assert.equal(mat.cols, 1)
-    assert.equal(mat.ucharAt(0), 0)
-    assert.equal(mat.ucharAt(1), 2)
+    assert.strictEqual(mat.isContinuous(), false)
+    assert.strictEqual(mat.rows, 2)
+    assert.strictEqual(mat.cols, 1)
+    assert.strictEqual(mat.ucharAt(0), 0)
+    assert.strictEqual(mat.ucharAt(1), 2)
 
     mat.delete()
 
     mat = src.colRange({start: 0, end: 1})
 
-    assert.equal(mat.isContinuous(), false)
-    assert.equal(mat.rows, 2)
-    assert.equal(mat.cols, 1)
-    assert.equal(mat.ucharAt(0), 0)
-    assert.equal(mat.ucharAt(1), 2)
+    assert.strictEqual(mat.isContinuous(), false)
+    assert.strictEqual(mat.rows, 2)
+    assert.strictEqual(mat.cols, 1)
+    assert.strictEqual(mat.ucharAt(0), 0)
+    assert.strictEqual(mat.ucharAt(1), 2)
 
     mat.delete()
 
     mat = src.rowRange(1, 2)
 
-    assert.equal(mat.rows, 1)
-    assert.equal(mat.cols, 2)
+    assert.strictEqual(mat.rows, 1)
+    assert.strictEqual(mat.cols, 2)
     assert.deepEqual(mat.data, new Uint8Array([2, 3]))
 
     mat.delete()
 
     mat = src.rowRange({start: 1, end: 2})
 
-    assert.equal(mat.rows, 1)
-    assert.equal(mat.cols, 2)
+    assert.strictEqual(mat.rows, 1)
+    assert.strictEqual(mat.cols, 2)
     assert.deepEqual(mat.data, new Uint8Array([2, 3]))
 
     mat.delete()
@@ -961,20 +963,20 @@ QUnit.test('test_mat_diag', function(assert) {
     const d1 = mat.diag(1)
     const d2 = mat.diag(-1)
 
-    assert.equal(mat.isContinuous(), true)
-    assert.equal(d.isContinuous(), false)
-    assert.equal(d1.isContinuous(), false)
-    assert.equal(d2.isContinuous(), false)
+    assert.strictEqual(mat.isContinuous(), true)
+    assert.strictEqual(d.isContinuous(), false)
+    assert.strictEqual(d1.isContinuous(), false)
+    assert.strictEqual(d2.isContinuous(), false)
 
-    assert.equal(d.ucharAt(0), 0)
-    assert.equal(d.ucharAt(1), 4)
-    assert.equal(d.ucharAt(2), 8)
+    assert.strictEqual(d.ucharAt(0), 0)
+    assert.strictEqual(d.ucharAt(1), 4)
+    assert.strictEqual(d.ucharAt(2), 8)
 
-    assert.equal(d1.ucharAt(0), 1)
-    assert.equal(d1.ucharAt(1), 5)
+    assert.strictEqual(d1.ucharAt(0), 1)
+    assert.strictEqual(d1.ucharAt(1), 5)
 
-    assert.equal(d2.ucharAt(0), 3)
-    assert.equal(d2.ucharAt(1), 7)
+    assert.strictEqual(d2.ucharAt(0), 3)
+    assert.strictEqual(d2.ucharAt(1), 7)
 
     mat.delete()
     d.delete()

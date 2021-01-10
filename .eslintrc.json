@@ -14,10 +14,15 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
+  "ignorePatterns": ["opencv.js"],
   "plugins": [
     "@typescript-eslint"
   ],
   "rules": {
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
     "indent": [
       "error",
       2

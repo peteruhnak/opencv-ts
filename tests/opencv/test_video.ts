@@ -67,38 +67,36 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-import cv from '../../'
+import cv from '../..'
 
-QUnit.module('Video', {})
-QUnit.test('Background Segmentation', function(assert) {
-  // BackgroundSubtractorMOG2
-  {
-    const history = 600
-    const varThreshold = 15
-    const detectShadows = true
+QUnit.module('Video', {
+  before: cv.loadOpenCV
+})
 
-    let mog2 = new cv.BackgroundSubtractorMOG2(history, varThreshold, detectShadows)
+QUnit.test('Background Segmentation', function (assert) {
+  const history = 600
+  const varThreshold = 15
+  const detectShadows = true
 
-    assert.equal(mog2 instanceof cv.BackgroundSubtractorMOG2, true)
+  let mog2 = new cv.BackgroundSubtractorMOG2(history, varThreshold, detectShadows)
 
-    mog2.delete()
+  assert.true(mog2 instanceof cv.BackgroundSubtractorMOG2)
 
-    mog2 = new cv.BackgroundSubtractorMOG2()
+  mog2.delete()
 
-    assert.equal(mog2 instanceof cv.BackgroundSubtractorMOG2, true)
+  mog2 = new cv.BackgroundSubtractorMOG2()
 
-    mog2.delete()
+  assert.equal(mog2 instanceof cv.BackgroundSubtractorMOG2, true)
 
-    mog2 = new cv.BackgroundSubtractorMOG2(history)
+  mog2.delete()
 
-    assert.equal(mog2 instanceof cv.BackgroundSubtractorMOG2, true)
+  mog2 = new cv.BackgroundSubtractorMOG2(history)
 
-    mog2.delete()
+  mog2.delete()
 
-    mog2 = new cv.BackgroundSubtractorMOG2(history, varThreshold)
+  mog2 = new cv.BackgroundSubtractorMOG2(history, varThreshold)
 
-    assert.equal(mog2 instanceof cv.BackgroundSubtractorMOG2, true)
+  assert.equal(mog2 instanceof cv.BackgroundSubtractorMOG2, true)
 
-    mog2.delete()
-  }
+  mog2.delete()
 })

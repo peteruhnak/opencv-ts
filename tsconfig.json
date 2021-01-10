@@ -3,6 +3,7 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "noImplicitAny": true,
+    "rootDir": ".",
     "baseUrl": ".",
     "typeRoots": [
       "node_modules/@types"

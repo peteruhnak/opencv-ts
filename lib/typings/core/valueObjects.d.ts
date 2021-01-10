@@ -220,4 +220,4 @@ export interface ExceptionLike {
   msg: string
 }
 
-export function exceptionFromPtr(ptr: unknown): ExceptionLike
+export function exceptionFromPtr(ptr: number): ExceptionLike
