@@ -1,8 +1,9 @@
+from os import replace
 import sys
 import os.path
+import re
 
-
-def main(opencv_path: str, build_js_path: str, ts_gen_path: str):
+def main(opencv_path: str, build_js_path: str, ts_gen_path: str, replace_wsl: bool=False):
     hdr_parser_path = opencv_path + "/modules/python/src2/hdr_parser.py"
     jsgen_path = opencv_path + "/modules/js/generator"
     white_list_path = opencv_path + "/platforms/js/opencv_js.config.py"
@@ -20,8 +21,11 @@ def main(opencv_path: str, build_js_path: str, ts_gen_path: str):
     import tsgen
 
     headers = open(headers_path, "r").read().split(";")
-    if headers[0].startswith("/mnt/d/"):
-        headers = [h.replace("/mnt/d/", "D:/") for h in headers]
+    if replace_wsl:
+      # replace `/mnt/<drive>/path` as `<drive>:/path`
+      match = re.match('/mnt/([a-z])/', headers[0])
+      if match:
+        headers = [h.replace(match[0], match[1] + ':/') for h in headers]
 
     modules_white_list = jsgen.load_white_list(white_list_path)
 
@@ -43,4 +47,4 @@ if __name__ == "__main__":
     opencv_path = "D:/prog/opencv"
     build_js_path = "D:/prog/github/build_js"
     ts_gen_path = "D:/prog/opencv-ts/lib/typings/gen"
-    main(opencv_path=opencv_path, build_js_path=build_js_path, ts_gen_path=ts_gen_path)
+    main(opencv_path=opencv_path, build_js_path=build_js_path, ts_gen_path=ts_gen_path, replace_wsl=True)
