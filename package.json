@@ -4,10 +4,11 @@
   "description": "",
   "private": true,
   "license": "MIT",
-  "main": "./lib/loader.js",
+  "main": "index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {
     "test": "node --enable-source-maps --liftoff --no-wasm-tier-up ./node_modules/qunit/bin/qunit.js"
+    "gen:types": "python ./ts_generator/typegen.py",
   },
   "optionalDependencies": {},
   "devDependencies": {

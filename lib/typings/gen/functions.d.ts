@@ -2,7 +2,7 @@ import { int, float, double } from '../core/_types'
 import { Mat } from '../core/Mat'
 import { IntVector, FloatVector, PointVector, MatVector, RectVector, KeyPointVector, DMatchVector, DMatchVectorVector } from '../core/vectors'
 import { DrawMatchesFlags } from './enums'
-import { SizeLike, PointLike, Point2fLike, RectLike, TermCriteriaLike, ScalarLike, RotatedRectLike } from '../core/valueObjects'
+import { SizeLike, PointLike, Point2fLike, RectLike, TermCriteriaLike, ScalarLike, RotatedRectLike, MomentsLike } from '../core/valueObjects'
 
 /**
    * @brief Finds edges in an image using the Canny algorithm @cite Canny86 .
@@ -631,12 +631,12 @@ export function boxFilter(src: Mat, dst: Mat, ddepth: int, ksize: SizeLike, anch
 /**
    * @overload
  */
-export function calcBackProject(images: MatVector, channels: IntVector, hist: Mat, dst: Mat, ranges: FloatVector, scale: double): void
+export function calcBackProject(images: MatVector, channels: IntVector|int[], hist: Mat, dst: Mat, ranges: FloatVector|float[], scale: double): void
 
 /**
    * @overload
  */
-export function calcHist(images: MatVector, channels: IntVector, mask: Mat, hist: Mat, histSize: IntVector, ranges: FloatVector, accumulate?: boolean): void
+export function calcHist(images: MatVector, channels: IntVector|int[], mask: Mat, hist: Mat, histSize: IntVector|int[], ranges: FloatVector|float[], accumulate?: boolean): void
 
 /**
    * @brief Computes a dense optical flow using the Gunnar Farneback's algorithm.
@@ -2339,7 +2339,7 @@ export function grabCut(img: Mat, mask: Mat, rect: RectLike, bgdModel: Mat, fgdM
 /**
    * @overload
  */
-export function groupRectangles(rectList: RectVector, weights: IntVector, groupThreshold: int, eps?: double): void
+export function groupRectangles(rectList: RectVector, weights: IntVector|int[], groupThreshold: int, eps?: double): void
 
 /**
    * @overload
@@ -2761,7 +2761,7 @@ export function minAreaRect(points: Mat): RotatedRectLike
    * channels; as a special case, when fromTo[k\*2] is negative, the corresponding output channel is
    * filled with zero .
  */
-export function mixChannels(src: MatVector, dst: MatVector, fromTo: IntVector): void
+export function mixChannels(src: MatVector, dst: MatVector, fromTo: IntVector|int[]): void
 
 /**
    * @brief Calculates all of the moments up to the third order of a polygon or rasterized shape.
@@ -2780,7 +2780,7 @@ export function mixChannels(src: MatVector, dst: MatVector, fromTo: IntVector): 
    * 
    * @sa  contourArea, arcLength
  */
-export function moments(array: Mat, binaryImage?: boolean): unknown
+export function moments(array: Mat, binaryImage?: boolean): MomentsLike
 
 /**
    * @brief Performs advanced morphological transformations.

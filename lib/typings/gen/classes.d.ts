@@ -21,7 +21,7 @@ import { EmClassHandle } from '../emscripten/emscripten'
  * Scale Spaces. Pablo F. Alcantarilla, Jesús Nuevo and Adrien Bartoli. In
  * British Machine Vision Conference (BMVC), Bristol, UK, September 2013.
  */
-export class AKAZE extends EmClassHandle {
+export class AKAZE extends Feature2D {
 
   /**
    * @brief The AKAZE constructor
@@ -36,7 +36,7 @@ export class AKAZE extends EmClassHandle {
    * @param diffusivity Diffusivity type. DIFF_PM_G1, DIFF_PM_G2, DIFF_WEICKERT or
    * DIFF_CHARBONNIER
    */
-  create(descriptor_type?: AKAZE_DescriptorType, descriptor_size?: int, descriptor_channels?: int, threshold?: float, nOctaves?: int, nOctaveLayers?: int, diffusivity?: KAZE_DiffusivityType): AKAZE
+  constructor(descriptor_type?: AKAZE_DescriptorType, descriptor_size?: int, descriptor_channels?: int, threshold?: float, nOctaves?: int, nOctaveLayers?: int, diffusivity?: KAZE_DiffusivityType)
 
   /**
    * 
@@ -118,12 +118,12 @@ export class AKAZE extends EmClassHandle {
 /**
  * @brief Wrapping class for feature detection using the AGAST method. :
  */
-export class AgastFeatureDetector extends EmClassHandle {
+export class AgastFeatureDetector extends Feature2D {
 
   /**
    * 
    */
-  create(threshold?: int, nonmaxSuppression?: boolean, type?: AgastFeatureDetector_DetectorType): AgastFeatureDetector
+  constructor(threshold?: int, nonmaxSuppression?: boolean, type?: AgastFeatureDetector_DetectorType)
 
   /**
    * 
@@ -217,7 +217,7 @@ export class AlignMTB extends EmClassHandle {
    * median value.
    * @param cut if true cuts images, otherwise fills the new regions with zeros.
    */
-  createAlignMTB(max_bits?: int, exclude_range?: int, cut?: boolean): AlignMTB
+  constructor(max_bits?: int, exclude_range?: int, cut?: boolean)
 
   /**
    * 
@@ -267,7 +267,7 @@ export class AlignMTB extends EmClassHandle {
  * by trying each one. This descriptor matcher supports masking permissible matches of descriptor
  * sets.
  */
-export class BFMatcher extends EmClassHandle {
+export class BFMatcher extends DescriptorMatcher {
 
   /**
    * @brief Brute-force matcher create method.
@@ -282,14 +282,14 @@ export class BFMatcher extends EmClassHandle {
    * pairs. Such technique usually produces best results with minimal number of outliers when there are
    * enough matches. This is alternative to the ratio test, used by D. Lowe in SIFT paper.
    */
-  create(normType?: int, crossCheck?: boolean): BFMatcher
+  constructor(normType?: int, crossCheck?: boolean)
 
 }
 
 /**
  * @brief Class implementing the BRISK keypoint detector and descriptor extractor, described in @cite LCS11 .
  */
-export class BRISK extends EmClassHandle {
+export class BRISK extends Feature2D {
 
   /**
    * @brief The BRISK constructor
@@ -299,7 +299,7 @@ export class BRISK extends EmClassHandle {
    * @param patternScale apply this scale to the pattern used for sampling the neighbourhood of a
    * keypoint.
    */
-  create(thresh?: int, octaves?: int, patternScale?: float): BRISK
+  constructor(thresh?: int, octaves?: int, patternScale?: float)
 
   /**
    * @brief The BRISK constructor for a custom pattern
@@ -314,7 +314,7 @@ export class BRISK extends EmClassHandle {
    * keypoint scale 1).
    * @param indexChange index remapping of the bits.
    */
-  create(radiusList: FloatVector, numberList: IntVector, dMax?: float, dMin?: float, indexChange?: IntVector): BRISK
+  constructor(radiusList: FloatVector|float[], numberList: IntVector|int[], dMax?: float, dMin?: float, indexChange?: IntVector|int[])
 
   /**
    * @brief The BRISK constructor for a custom pattern, detection threshold and octaves
@@ -331,7 +331,7 @@ export class BRISK extends EmClassHandle {
    * keypoint scale 1).
    * @param indexChange index remapping of the bits.
    */
-  create(thresh: int, octaves: int, radiusList: FloatVector, numberList: IntVector, dMax?: float, dMin?: float, indexChange?: IntVector): BRISK
+  constructor(thresh: int, octaves: int, radiusList: FloatVector|float[], numberList: IntVector|int[], dMax?: float, dMin?: float, indexChange?: IntVector|int[])
 
   /**
    * 
@@ -402,7 +402,7 @@ export class BackgroundSubtractorMOG2 extends EmClassHandle {
    * @param detectShadows If true, the algorithm will detect shadows and mark them. It decreases the
    * speed a bit, so if you do not need this feature, set the parameter to false.
    */
-  createBackgroundSubtractorMOG2(history?: int, varThreshold?: double, detectShadows?: boolean): BackgroundSubtractorMOG2
+  constructor(history?: int, varThreshold?: double, detectShadows?: boolean)
 
 }
 
@@ -431,7 +431,7 @@ export class CLAHE extends EmClassHandle {
    * @param tileGridSize Size of grid for histogram equalization. Input image will be divided into
    * equally sized rectangular tiles. tileGridSize defines the number of tiles in row and column.
    */
-  createCLAHE(clipLimit?: double, tileGridSize?: SizeLike): CLAHE
+  constructor(clipLimit?: double, tileGridSize?: SizeLike)
 
   /**
    * 
@@ -494,7 +494,7 @@ export class CalibrateDebevec extends EmClassHandle {
    * @param random if true sample pixel locations are chosen at random, otherwise they form a
    * rectangular grid.
    */
-  createCalibrateDebevec(samples?: int, lambda?: float, random?: boolean): CalibrateDebevec
+  constructor(samples?: int, lambda?: float, random?: boolean)
 
   /**
    * 
@@ -542,7 +542,7 @@ export class CalibrateRobertson extends EmClassHandle {
    * @param max_iter maximal number of Gauss-Seidel solver iterations.
    * @param threshold target difference between results of two successive steps of the minimization.
    */
-  createCalibrateRobertson(max_iter?: int, threshold?: float): CalibrateRobertson
+  constructor(max_iter?: int, threshold?: float)
 
   /**
    * 
@@ -627,7 +627,7 @@ export class CascadeClassifier extends EmClassHandle {
    * @param minSize Minimum possible object size. Objects smaller than that are ignored.
    * @param maxSize Maximum possible object size. Objects larger than that are ignored. If `maxSize == minSize` model is evaluated on single scale.
    */
-  detectMultiScale2(image: Mat, objects: RectVector, numDetections: IntVector, scaleFactor?: double, minNeighbors?: int, flags?: int, minSize?: SizeLike, maxSize?: SizeLike): void
+  detectMultiScale2(image: Mat, objects: RectVector, numDetections: IntVector|int[], scaleFactor?: double, minNeighbors?: int, flags?: int, minSize?: SizeLike, maxSize?: SizeLike): void
 
   /**
    * @overload
@@ -647,7 +647,7 @@ export class CascadeClassifier extends EmClassHandle {
    * cerr << "Detection " << detections[0] << " with weight " << weights[0] << endl;
    * @endcode
    */
-  detectMultiScale3(image: Mat, objects: RectVector, rejectLevels: IntVector, levelWeights: DoubleVector, scaleFactor?: double, minNeighbors?: int, flags?: int, minSize?: SizeLike, maxSize?: SizeLike, outputRejectLevels?: boolean): void
+  detectMultiScale3(image: Mat, objects: RectVector, rejectLevels: IntVector|int[], levelWeights: DoubleVector|double[], scaleFactor?: double, minNeighbors?: int, flags?: int, minSize?: SizeLike, maxSize?: SizeLike, outputRejectLevels?: boolean): void
 
   /**
    * @brief Checks whether the classifier has been loaded.
@@ -696,7 +696,7 @@ export class DescriptorMatcher extends EmClassHandle {
    * that is, copies both parameters and train data. If emptyTrainData is true, the method creates an
    * object copy with the current parameters but with empty train data.
    */
-  clone(emptyTrainData?: boolean): DescriptorMatcher
+  constructor(emptyTrainData?: boolean)
 
   /**
    * @brief Creates a descriptor matcher of a given type with the default parameters (using default
@@ -710,12 +710,12 @@ export class DescriptorMatcher extends EmClassHandle {
    * -   `BruteForce-Hamming(2)`
    * -   `FlannBased`
    */
-  create(descriptorMatcherType: string): DescriptorMatcher
+  constructor(descriptorMatcherType: string)
 
   /**
    * 
    */
-  create(matcherType: DescriptorMatcher_MatcherType): DescriptorMatcher
+  constructor(matcherType: DescriptorMatcher_MatcherType)
 
   /**
    * @brief Returns true if there are no train descriptors in the both collections.
@@ -843,12 +843,12 @@ export class DescriptorMatcher extends EmClassHandle {
 /**
  * @brief Wrapping class for feature detection using the FAST method. :
  */
-export class FastFeatureDetector extends EmClassHandle {
+export class FastFeatureDetector extends Feature2D {
 
   /**
    * 
    */
-  create(threshold?: int, nonmaxSuppression?: boolean, type?: FastFeatureDetector_DetectorType): FastFeatureDetector
+  constructor(threshold?: int, nonmaxSuppression?: boolean, type?: FastFeatureDetector_DetectorType)
 
   /**
    * 
@@ -975,17 +975,17 @@ export class Feature2D extends EmClassHandle {
 /**
  * @brief Wrapping class for feature detection using the goodFeaturesToTrack function. :
  */
-export class GFTTDetector extends EmClassHandle {
+export class GFTTDetector extends Feature2D {
 
   /**
    * 
    */
-  create(maxCorners?: int, qualityLevel?: double, minDistance?: double, blockSize?: int, useHarrisDetector?: boolean, k?: double): GFTTDetector
+  constructor(maxCorners?: int, qualityLevel?: double, minDistance?: double, blockSize?: int, useHarrisDetector?: boolean, k?: double)
 
   /**
    * 
    */
-  create(maxCorners: int, qualityLevel: double, minDistance: double, blockSize: int, gradiantSize: int, useHarrisDetector?: boolean, k?: double): GFTTDetector
+  constructor(maxCorners: int, qualityLevel: double, minDistance: double, blockSize: int, gradiantSize: int, useHarrisDetector?: boolean, k?: double)
 
   /**
    * 
@@ -1093,7 +1093,7 @@ export class HOGDescriptor extends EmClassHandle {
 
   gammaCorrection: boolean
 
-  svmDetector: FloatVector
+  svmDetector: FloatVector|float[]
 
   nlevels: int
 
@@ -1144,17 +1144,17 @@ export class HOGDescriptor extends EmClassHandle {
    * @param finalThreshold Final threshold
    * @param useMeanshiftGrouping indicates grouping algorithm
    */
-  detectMultiScale(img: Mat, foundLocations: RectVector, foundWeights: DoubleVector, hitThreshold?: double, winStride?: SizeLike, padding?: SizeLike, scale?: double, finalThreshold?: double, useMeanshiftGrouping?: boolean): void
+  detectMultiScale(img: Mat, foundLocations: RectVector, foundWeights: DoubleVector|double[], hitThreshold?: double, winStride?: SizeLike, padding?: SizeLike, scale?: double, finalThreshold?: double, useMeanshiftGrouping?: boolean): void
 
   /**
    * @brief Returns coefficients of the classifier trained for people detection (for 48x96 windows).
    */
-  getDaimlerPeopleDetector(): FloatVector
+  getDaimlerPeopleDetector(): FloatVector|float[]
 
   /**
    * @brief Returns coefficients of the classifier trained for people detection (for 64x128 windows).
    */
-  getDefaultPeopleDetector(): FloatVector
+  getDefaultPeopleDetector(): FloatVector|float[]
 
   /**
    * @brief loads HOGDescriptor parameters and coefficients for the linear SVM classifier from a file.
@@ -1178,7 +1178,7 @@ export class HOGDescriptor extends EmClassHandle {
  * F. Alcantarilla, Adrien Bartoli and Andrew J. Davison. In European Conference on Computer Vision
  * (ECCV), Fiorenze, Italy, October 2012.
  */
-export class KAZE extends EmClassHandle {
+export class KAZE extends Feature2D {
 
   /**
    * @brief The KAZE constructor
@@ -1191,7 +1191,7 @@ export class KAZE extends EmClassHandle {
    * @param diffusivity Diffusivity type. DIFF_PM_G1, DIFF_PM_G2, DIFF_WEICKERT or
    * DIFF_CHARBONNIER
    */
-  create(extended?: boolean, upright?: boolean, threshold?: float, nOctaves?: int, nOctaveLayers?: int, diffusivity?: KAZE_DiffusivityType): KAZE
+  constructor(extended?: boolean, upright?: boolean, threshold?: float, nOctaves?: int, nOctaveLayers?: int, diffusivity?: KAZE_DiffusivityType)
 
   /**
    * 
@@ -1277,7 +1277,7 @@ export class KAZE extends EmClassHandle {
  * 
  * - (Python) A complete example showing the use of the %MSER detector can be found at samples/python/mser.py
  */
-export class MSER extends EmClassHandle {
+export class MSER extends Feature2D {
 
   /**
    * @brief Full constructor for %MSER detector
@@ -1292,7 +1292,7 @@ export class MSER extends EmClassHandle {
    * @param _min_margin for color image, ignore too small margin
    * @param _edge_blur_size for color image, the aperture size for edge blur
    */
-  create(_delta?: int, _min_area?: int, _max_area?: int, _max_variation?: double, _min_diversity?: double, _max_evolution?: int, _area_threshold?: double, _min_margin?: double, _edge_blur_size?: int): MSER
+  constructor(_delta?: int, _min_area?: int, _max_area?: int, _max_variation?: double, _min_diversity?: double, _max_evolution?: int, _area_threshold?: double, _min_margin?: double, _edge_blur_size?: int)
 
   /**
    * @brief Detect %MSER regions
@@ -1361,7 +1361,7 @@ export class MergeDebevec extends EmClassHandle {
   /**
    * @brief Creates MergeDebevec object
    */
-  createMergeDebevec(): MergeDebevec
+  constructor()
 
   /**
    * 
@@ -1414,7 +1414,7 @@ export class MergeMertens extends EmClassHandle {
    * @param saturation_weight saturation measure weight
    * @param exposure_weight well-exposedness measure weight
    */
-  createMergeMertens(contrast_weight?: float, saturation_weight?: float, exposure_weight?: float): MergeMertens
+  constructor(contrast_weight?: float, saturation_weight?: float, exposure_weight?: float)
 
   /**
    * 
@@ -1472,7 +1472,7 @@ export class MergeRobertson extends EmClassHandle {
   /**
    * @brief Creates MergeRobertson object
    */
-  createMergeRobertson(): MergeRobertson
+  constructor()
 
   /**
    * 
@@ -1494,7 +1494,7 @@ export class MergeRobertson extends EmClassHandle {
  * moments and computes the descriptors using BRIEF (where the coordinates of random point pairs (or
  * k-tuples) are rotated according to the measured orientation).
  */
-export class ORB extends EmClassHandle {
+export class ORB extends Feature2D {
 
   /**
    * @brief The ORB constructor
@@ -1528,7 +1528,7 @@ export class ORB extends EmClassHandle {
    * pyramid layers the perceived image area covered by a feature will be larger.
    * @param fastThreshold the fast threshold
    */
-  create(nfeatures?: int, scaleFactor?: float, nlevels?: int, edgeThreshold?: int, firstLevel?: int, WTA_K?: int, scoreType?: ORB_ScoreType, patchSize?: int, fastThreshold?: int): ORB
+  constructor(nfeatures?: int, scaleFactor?: float, nlevels?: int, edgeThreshold?: int, firstLevel?: int, WTA_K?: int, scoreType?: ORB_ScoreType, patchSize?: int, fastThreshold?: int)
 
   /**
    * 
@@ -1629,7 +1629,7 @@ export class TonemapDrago extends EmClassHandle {
    * @param bias value for bias function in [0, 1] range. Values from 0.7 to 0.9 usually give best
    * results, default value is 0.85.
    */
-  createTonemapDrago(gamma?: float, saturation?: float, bias?: float): TonemapDrago
+  constructor(gamma?: float, saturation?: float, bias?: float)
 
   /**
    * 
@@ -1670,7 +1670,7 @@ export class TonemapMantiuk extends EmClassHandle {
    * dynamic range. Values from 0.6 to 0.9 produce best results.
    * @param saturation saturation enhancement value. See createTonemapDrago
    */
-  createTonemapMantiuk(gamma?: float, scale?: float, saturation?: float): TonemapMantiuk
+  constructor(gamma?: float, scale?: float, saturation?: float)
 
   /**
    * 
@@ -1714,7 +1714,7 @@ export class TonemapReinhard extends EmClassHandle {
    * @param color_adapt chromatic adaptation in [0, 1] range. If 1 channels are treated independently,
    * if 0 adaptation level is the same for each channel.
    */
-  createTonemapReinhard(gamma?: float, intensity?: float, light_adapt?: float, color_adapt?: float): TonemapReinhard
+  constructor(gamma?: float, intensity?: float, light_adapt?: float, color_adapt?: float)
 
   /**
    * 
