@@ -11,10 +11,18 @@ Main opencv-ts contents:
 
 * hand-written `lib/typings/core` for hand-written `core_bindings.cpp`
 * generated `lib/typings/gen` from wasm build of opencv
-* pretty-printed `opencv.js` (to avoid generating massive stacktraces in Node 14)
+* pretty-printed `lib/_opencv.js` (to avoid generating massive stacktraces in Node 14)
 * generator invoker `ts_generator/typegen.py`
-* `tests` are copied from `opencv` and converted to typescript mainly to test typings and find missing stuff
-  * still wip; you can't actually run them (yet)
+* `tests/opencv` are copied from `opencv` and converted to typescript mainly to test typings and find missing stuff
+
+## Running Tests
+
+1. clone repo && npm install
+2. compile tests `npm run watch:test`
+3. run all tests `npm run test`
+
+Or run a single test file `npm run test:single dist/tests/opencv/test_calib3d.js`
+
 
 ## Usage
 
@@ -105,10 +113,11 @@ Modify paths in `ts_generator/typegen.py`:
 * `opencv_path = "D:/prog/opencv"` <- `ts-experimental` opencv clone
 * `build_js_path = "D:/prog/github/build_js"` <- compiled opencv.js directory
 * `ts_gen_path = "D:/prog/opencv-ts/lib/typings/gen"` <- where to generate typings (`lib/typings/gen` of this repository)
+* `replace_wsl = True` <- applicable when running gen on Windows, but opencv.js was compiled via WSL
 
-Run `python ts_generator/typegen.py`.
+Run `npm run gen:types`.
 
-Note: you must use python 3.x for the typegen, because I am using python typings in some places (this will probably have to be changed later to support python 2).
+Note: Only Python 3.x is supported. 
 
 ### What Is Where
 
